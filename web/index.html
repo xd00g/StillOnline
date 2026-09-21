@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="index,follow,max-image-preview:large"><meta name="theme-color" content="#050606"><title>Still Online &mdash; After hours</title><meta name="description" content="Explore a weathered Mojave outpost: restart the generator, patch server racks, use a CRT terminal, and drift into an interactive desert Milky Way."><link rel="stylesheet" href="brand-fonts.css"><link rel="stylesheet" href="cinematic.css"><link rel="stylesheet" href="sky.css?v=signature21"><link rel="stylesheet" href="crt.css"><link rel="stylesheet" href="racks.css"><script src="sound.js" defer></script><script src="sky.js?v=signature21" defer></script><script src="flicker.js" defer></script><script src="racks.js" defer></script><script src="app.js" defer></script><script src="cinematic.js" defer></script>
+<link rel="canonical" href="https://mojave.nebulys.net/">
+<meta name="author" content="xD00g and Nebulys">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Still Online">
+<meta property="og:title" content="Still Online — An Interactive Mojave Outpost">
+<meta property="og:description" content="Explore a weathered Mojave outpost: restart the generator, patch server racks, use a CRT terminal, and drift into an interactive desert Milky Way.">
+<meta property="og:url" content="https://mojave.nebulys.net/">
+<meta property="og:image" content="https://mojave.nebulys.net/assets/social.jpg">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="A glowing roadside server station beneath the Mojave dusk sky.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Still Online — An Interactive Mojave Outpost">
+<meta name="twitter:description" content="Explore a weathered Mojave outpost: restart the generator, patch server racks, use a CRT terminal, and drift into an interactive desert Milky Way.">
+<meta name="twitter:image" content="https://mojave.nebulys.net/assets/social.jpg">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<script src="analytics.js" defer></script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "WebSite", "@id": "https://mojave.nebulys.net/#website", "url": "https://mojave.nebulys.net/", "name": "Still Online", "inLanguage": "en"}, {"@type": "CreativeWork", "@id": "https://mojave.nebulys.net/#artwork", "name": "Still Online", "description": "Explore a weathered Mojave outpost: restart the generator, patch server racks, use a CRT terminal, and drift into an interactive desert Milky Way.", "url": "https://mojave.nebulys.net/", "image": "https://mojave.nebulys.net/assets/social.jpg", "isAccessibleForFree": true, "creator": [{"@type": "Person", "name": "xD00g", "url": "https://www.doogster.com/"}, {"@type": "Organization", "name": "Nebulys", "url": "https://www.nebulys.net/"}]}]}</script>
+</head>
+<body><a class="skip" href="#controls">Skip to scene controls</a>
+<main class="outpost"><p id="scene-description" class="sr-only">Still Online is an interactive Blender diorama by xD00g and Nebulys. Explore a Mojave service station with working server racks, a CRT terminal, a restartable generator and an imagined Milky Way. Sound is optional and motion can be turned off.</p>
+<section class="scene" id="scene" aria-label="Interactive desert outpost" aria-describedby="scene-description">
+<picture><source srcset="assets/station.webp" type="image/webp"><img id="poster" src="assets/station.webp" width="1920" height="1080" alt="A weathered Mojave service station with glowing server racks, distant untrimmed palms, and a sign reading Remote Support: Still Online."></picture>
+<video id="idle" class="film" muted playsinline loop preload="metadata" poster="assets/station.webp" aria-hidden="true"><source src="assets/idle.mp4" type="video/mp4"></video>
+<video id="restart" class="film" muted playsinline preload="none" poster="assets/station.webp" aria-hidden="true" hidden><source src="assets/restart.mp4" type="video/mp4"></video>
+<div class="hotspots" aria-label="Explore the outpost">
+<button class="hotspot terminal-spot" data-open="terminal" data-station="2" aria-label="Open terminal"><svg class="node-reticle" viewBox="0 0 28 28" aria-hidden="true"><circle cx="14" cy="14" r="7"/><path d="M14 1v4m0 18v4M1 14h4m18 0h4"/><circle class="node-core" cx="14" cy="14" r="2"/></svg><span class="spot-label"><span class="node-name">Terminal</span><span class="node-action">Open console<svg class="node-arrow" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span></span></button>
+<button class="hotspot rack-spot" data-open="rack" data-station="1" aria-label="Inspect server room"><svg class="node-reticle" viewBox="0 0 28 28" aria-hidden="true"><circle cx="14" cy="14" r="7"/><path d="M14 1v4m0 18v4M1 14h4m18 0h4"/><circle class="node-core" cx="14" cy="14" r="2"/></svg><span class="spot-label"><span class="node-name">Server room</span><span class="node-action">Inspect the racks<svg class="node-arrow" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span></span></button>
+<button class="hotspot generator-spot" data-restart data-station="0" aria-label="Restart generator"><svg class="node-reticle" viewBox="0 0 28 28" aria-hidden="true"><circle cx="14" cy="14" r="7"/><path d="M14 1v4m0 18v4M1 14h4m18 0h4"/><circle class="node-core" cx="14" cy="14" r="2"/></svg><span class="spot-label"><span class="node-name">Generator</span><span class="node-action">Restart power<svg class="node-arrow" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span></span></button>
+<button class="hotspot horizon-spot" data-sky aria-label="Explore the desert sky"><svg class="node-reticle" viewBox="0 0 28 28" aria-hidden="true"><circle cx="14" cy="14" r="7"/><path d="M14 1v4m0 18v4M1 14h4m18 0h4"/><circle class="node-core" cx="14" cy="14" r="2"/></svg><span class="spot-label"><span class="node-name">Desert sky</span><span class="node-action">Explore the Milky Way<svg class="node-arrow" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span></span></button>
+</div>
+<button id="frameButton" class="frame-button" aria-pressed="false">Fit full scene</button>
+</section>
+<section id="controls" class="cinema-bar" aria-label="Scene controls">
+<div class="identity"><h1 class="sr-only">Still Online — Interactive Mojave Outpost</h1><p>&copy; 2026<span aria-hidden="true">|</span><a href="https://www.nebulys.net/" target="_blank" rel="noopener noreferrer">Nebulys</a><span aria-hidden="true">|</span><a href="https://www.doogster.com/" target="_blank" rel="noopener noreferrer">xD00g</a></p></div>
+<nav class="scene-actions" aria-label="Explore the outpost"><button data-open="terminal">Terminal</button><button data-open="rack">Server room</button><button data-restart>Restart generator</button></nav>
+<div class="preferences"><button id="soundButton" aria-pressed="false">Sound off</button><button id="motionButton" aria-pressed="true">Motion on</button><button id="aboutButton">Field notes</button></div>
+<div class="station-state"><span id="stateLamp"></span><span id="stateTitle">Still online</span><span id="stateDetail" class="sr-only">Quietly keeping things running.</span></div>
+</section>
+<p id="announcement" class="sr-only" aria-live="polite"></p>
+</main>
+<dialog id="terminalDialog" aria-labelledby="terminalTitle">
+<div class="dialog-bar"><h2 id="terminalTitle">Station terminal</h2><button class="close" data-close aria-label="Close terminal">Close <kbd>Esc</kbd></button></div>
+<div class="crt-glass"><p class="terminal-subtitle">LOCAL CONSOLE / FICTIONAL OUTPOST</p>
+<div id="terminalOutput" class="terminal-output" role="log" aria-live="polite" aria-label="Terminal responses"><p>STILL ONLINE / roadside maintenance console<br>No tickets. No traffic. Plenty of dust.<br><br>Type <b>help</b> to get your bearings.</p></div>
+<form id="terminalForm" autocomplete="off"><label for="command">station:~ $</label><input id="command" name="command" maxlength="160" placeholder="help" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Terminal command"><button type="submit">Enter</button></form>
+</div><div class="quick-commands" aria-label="Suggested commands"><button data-command="help">help</button><button data-command="status">status</button><button data-command="reboot">reboot</button><button data-command="links">links</button></div>
+</dialog>
+<dialog id="infoDialog" aria-labelledby="infoTitle"><div class="dialog-bar"><h2 id="infoTitle">Field notes</h2><button class="close" data-close aria-label="Close field notes">Close <kbd>Esc</kbd></button></div><div id="infoContent" class="info-content"></div></dialog>
+
+<noscript><p>The still scene is available. Enable JavaScript to explore the station and desert sky.</p></noscript>
+</body></html>

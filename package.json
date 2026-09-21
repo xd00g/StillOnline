@@ -1,0 +1,12 @@
+{
+  "name": "still-online",
+  "version": "1.0.0",
+  "private": true,
+  "description": "An interactive Mojave roadside outpost",
+  "scripts": {
+    "start": "node scripts/serve.cjs"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}
