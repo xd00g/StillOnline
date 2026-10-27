@@ -1,0 +1,19 @@
+/* A movable practical light; the original scene remains fixed beneath it. */
+.inspection-layer{position:absolute;inset:0;z-index:8;pointer-events:none}
+.inspection-layer[hidden]{display:none}
+.inspection-beam{position:absolute;inset:0;width:100%;height:100%;pointer-events:auto;touch-action:none;cursor:crosshair}
+.inspection-beam:focus-visible{outline:1px solid #d8ba86;outline-offset:-5px}
+.inspection-caption{position:absolute;left:26px;bottom:22px;max-width:min(380px,calc(100% - 52px));color:#eee2cd;pointer-events:none}
+.inspection-caption p{margin:0 0 10px;font:12px/1.6 Inter,sans-serif}
+#inspection-help{color:#e8d8bb;text-shadow:0 2px 5px #050606}
+.inspection-finding:empty{display:none}
+.inspection-finding{padding:16px 18px;background:#151411f2;border-radius:3px;box-shadow:0 8px 24px #0005}
+.inspection-finding strong{display:block;margin-bottom:6px;font-weight:600;color:#f8ecd5}
+.inspection-close{pointer-events:auto;min-height:44px;padding:8px 12px;background:#151411ed;border:1px solid #887450;border-radius:3px;color:#f4e9d8;font:12px Inter,sans-serif}
+.inspection-close span{margin-left:20px;font-size:18px}
+.inspection-close:hover{background:#30291e}.inspection-close:focus-visible{outline:2px solid #eed2a4;outline-offset:3px}
+@media(max-width:700px){.inspection-caption{left:16px;bottom:12px;max-width:calc(100% - 32px)}.inspection-caption p{font-size:11px}.inspection-finding{padding:10px 12px;max-width:320px}#inspection-help{max-width:260px}}
+/* Keep the original cinema bar, with room for the two new physical interactions. */
+.outpost{grid-template-rows:minmax(0,1fr) auto}.cinema-bar{min-height:94px;gap:18px}.scene-actions{gap:18px}
+@media(min-width:701px) and (max-width:1180px){.cinema-bar{display:grid;grid-template-columns:1fr auto;gap:5px 20px;padding-block:12px}.scene-actions{grid-column:1/-1;grid-row:1;justify-content:center}.identity{grid-column:1}.preferences{grid-column:2}.identity p{font-size:10px}}
+@media(max-width:700px){.scene-actions{flex-wrap:wrap;justify-content:flex-start;gap:0 20px}.scene-actions button{padding-block:6px}.cinema-bar{gap:9px}.identity p{font-size:12px}}

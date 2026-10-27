@@ -4,8 +4,10 @@ An interactive Mojave roadside outpost by xD00g and Nebulys.
 
 [Explore the outpost](https://mojave.nebulys.net/)
 
-Restart the generator, use the CRT terminal, reconnect the server racks, or drift
-through the desert Milky Way. Sound and motion can be switched off.
+Restart the generator, use the CRT terminal, reconnect the server racks, tune a
+shortwave radio, or drift through the desert Milky Way. A movable work light
+reveals maintenance marks. Dust, distant headlights, and a storm beyond the
+ridge occasionally pass through. Sound and motion can be switched off.
 
 ## Run locally
 
@@ -16,6 +18,29 @@ npm start
 ```
 
 Open http://127.0.0.1:4190/. No dependencies or build step are required.
+
+## Explore
+
+- **Radio:** turn the tuning knob, use its arrow keys or fine-tune slider, or
+  select a known frequency. 6.20 MHz carries a fictional weather bulletin,
+  7.45 MHz an original synthesized instrumental, and 9.15 MHz a distant voice.
+  Listen enables sound; spoken bulletins are a separate opt-in and require a
+  local English speech voice. Every transmission also has a text version.
+- **Work light:** sweep with a pointer or touch, or move with the arrow keys.
+  Escape puts it down. On phones it temporarily fits the whole station.
+- **Relay repair:** enter `diagnose` in the terminal, then read the maintenance
+  records with `logs` and `cat notes/relay-wiring.txt`. Repatch RELAY-01 to port
+  02, restart that machine, wait for it to boot, and run `ping relay`. The
+  activity is optional and only affects this browser tab. `repair reset`
+  resets it without changing the other machines.
+- **Desert events:** occasional gusts, distant headlights, and soft lightning
+  run while the scene is visible and motion is enabled. The terminal's
+  `weather` command lists cues you can request, then watch after closing it.
+  Effects pause during dialogs and generator recovery, and respect reduced
+  motion. They are authored scenery, not live weather data.
+
+All operator records, replies, frequencies, and equipment behavior are fiction.
+The artwork needs no account, server connection, or real network commands.
 
 ## Source
 

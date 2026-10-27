@@ -19,7 +19,9 @@
   const get = id => devices.find(device => device.id === id);
   const booting = device => device.powered && device.bootUntil > Date.now();
   const linked = device => device.powered && !booting(device) && device.port !== null;
-  const emit = name => document.dispatchEvent(new CustomEvent('stationracks:' + name));
+  const getState = () => devices.map(device => ({ id: device.id, name: device.name, powered: device.powered, booting: booting(device), port: device.port, linked: linked(device) }));
+  const emit = (name, detail) => document.dispatchEvent(new CustomEvent('stationracks:' + name, { detail }));
+  const changed = (action, deviceId = null) => emit('change', { action, deviceId, devices: getState() });
 
   function server(device) {
     return `<section class="rack-machine" data-device="${device.id}" aria-label="${device.name}">
@@ -75,7 +77,7 @@
     resizeObserver.observe(board);
     document.addEventListener('visibilitychange', visibilityChanged);
   }
-  function say(text) { announcement.textContent = text; }
+  function say(text) { if (announcement) announcement.textContent = text; }
   function selectCable(id) {
     selected = id;
     const device = get(id);
@@ -83,26 +85,38 @@
     render();
   }
   function connect(id, port) {
+    if (!get(id) || !Number.isInteger(port) || port < 1 || port > 8) return false;
     const device = get(id), occupied = devices.find(other => other.port === port && other.id !== id);
     if (occupied) { say(`Port ${String(port).padStart(2,'0')} is occupied by ${occupied.name}. Choose a free port.`); render(); return false; }
     device.port = port;
     say(`${device.name} connected to port ${String(port).padStart(2,'0')}. ${linked(device) ? 'Link restored.' : booting(device) ? 'Waiting for boot to finish.' : 'Power is off. The link stays dark.'}`);
-    render(); return true;
+    render(); changed('connect', id); return true;
   }
   function unplug(id) {
+    if (!get(id)) return false;
     const device = get(id); device.port = null;
     say(`${device.name} unplugged. Its switch link and activity lights are off.`);
-    render();
+    render(); changed('unplug', id); return true;
+  }
+  function togglePower(id) {
+    const device = get(id); if (!device) return false;
+    device.powered = !device.powered; device.bootUntil = device.powered ? Date.now() + BOOT_MS : 0;
+    say(`${device.name} ${device.powered ? 'powering up. Booting for a few seconds.' : 'powered off. Its link and activity lights are off.'}`);
+    render(); changed('power', id); scheduleBoot(); return true;
+  }
+  function restartDevice(id) {
+    const device = get(id); if (!device || !device.powered || booting(device)) return false;
+    device.bootUntil = Date.now() + BOOT_MS;
+    say(`${device.name} restarting. Link and activity are down until boot completes.`);
+    render(); changed('restart', id); scheduleBoot(); return true;
   }
   function onClick(event) {
     if (suppressClick) { suppressClick = false; event.preventDefault(); return; }
     const button = event.target.closest('button'); if (!button) return;
     if (button.dataset.power) {
-      const device = get(button.dataset.power); device.powered = !device.powered; device.bootUntil = device.powered ? Date.now() + BOOT_MS : 0;
-      say(`${device.name} ${device.powered ? 'powering up. Booting for a few seconds.' : 'powered off. Its link and activity lights are off.'}`); render(); scheduleBoot();
+      togglePower(button.dataset.power);
     } else if (button.dataset.restartDevice) {
-      const device = get(button.dataset.restartDevice); if (!device.powered || booting(device)) return;
-      device.bootUntil = Date.now() + BOOT_MS; say(`${device.name} restarting. Link and activity are down until boot completes.`); render(); scheduleBoot();
+      restartDevice(button.dataset.restartDevice);
     } else if (button.dataset.cableId) selectCable(button.dataset.cableId);
     else if (button.dataset.looseCable) selectCable(button.dataset.looseCable);
     else if (button.dataset.switchPort) {
@@ -114,7 +128,7 @@
     else if (button.classList.contains('rack-deselect')) { selected = null; render(); say('Cable set down. Select another plug or try a machine.'); }
     else if (button.classList.contains('rack-reset')) {
       devices.forEach((device,i) => { device.port = 1 + i*2; }); selected = null;
-      say('Original wiring restored. Machine power states are unchanged.'); render();
+      say('Original wiring restored. Machine power states are unchanged.'); render(); changed('reset');
     }
   }
   function pointerDown(event) {
@@ -146,15 +160,15 @@
   function cancelDrag() { if (!drag) return; drag = null; dialog.classList.remove('is-patching'); render(); }
   function scheduleBoot() {
     clearTimeout(timer); timer = 0;
-    if (!dialog?.open || document.hidden) return;
+    const complete = devices.filter(device => device.bootUntil && device.bootUntil <= Date.now());
+    complete.forEach(device => { device.bootUntil = 0; });
+    if (complete.length) {
+      say(complete.map(device => `${device.name} ready. ${device.port !== null ? 'Link restored.' : 'Cable unplugged; link stays dark.'}`).join(' '));
+      render(); complete.forEach(device => changed('boot', device.id));
+    }
     const pending = devices.filter(booting); if (!pending.length) return;
-    timer = setTimeout(() => {
-      timer = 0;
-      const complete = devices.filter(device => device.bootUntil && device.bootUntil <= Date.now());
-      complete.forEach(device => { device.bootUntil = 0; });
-      if (complete.length) say(complete.map(device => `${device.name} ready. ${device.port !== null ? 'Link restored.' : 'Cable unplugged; link stays dark.'}`).join(' '));
-      render(); scheduleBoot();
-    }, Math.max(20, Math.min(...pending.map(device => device.bootUntil)) - Date.now() + 20));
+    // A boot finishes even after the visitor leaves the rack room.
+    timer = setTimeout(scheduleBoot, Math.max(20, Math.min(...pending.map(device => device.bootUntil)) - Date.now() + 20));
   }
   function render() {
     if (!dialog) return;
@@ -221,19 +235,18 @@
       wires.append(group);
     });
   }
-  function visibilityChanged() { if (!dialog?.open) return; if (document.hidden) { clearTimeout(timer); timer=0; cancelAnimationFrame(frame); frame=0; } else { render(); scheduleBoot(); } }
+  function visibilityChanged() { if (!dialog?.open) return; if (document.hidden) { cancelAnimationFrame(frame); frame=0; } else { render(); scheduleBoot(); } }
   function onClose(event) {
     if (event && (event.currentTarget !== dialog || event.currentTarget.open)) return;
     if (!isOpen) return;
     isOpen = false;
-    clearTimeout(timer); timer=0; cancelAnimationFrame(frame); frame=0; cancelDrag();
+    cancelAnimationFrame(frame); frame=0; cancelDrag();
     dialog.classList.remove('is-open'); emit('close');
     const target=returnFocus; returnFocus=null; if(target?.isConnected) target.focus({preventScroll:true});
   }
   function open(options={}) {
     mount(); if(dialog.open) return;
     returnFocus=options.returnFocus || document.activeElement;
-    devices.forEach(device=>{if(device.bootUntil<=Date.now())device.bootUntil=0;});
     dialog.classList.toggle('rack-motion-off', document.getElementById('motionButton')?.getAttribute('aria-pressed') === 'false');
     dialog.showModal(); isOpen = true; dialog.classList.add('is-open'); render(); scheduleBoot(); emit('open');
     dialog.querySelector('.racks-close').focus({preventScroll:true});
@@ -243,5 +256,5 @@
     close(); clearTimeout(timer); cancelAnimationFrame(frame); resizeObserver?.disconnect();
     document.removeEventListener('visibilitychange',visibilityChanged); dialog?.remove(); dialog=null;board=null;wires=null;selected=null;drag=null;
   }
-  window.StationRacks=Object.freeze({open,close,destroy,getState:()=>devices.map(device=>({id:device.id,name:device.name,powered:device.powered,booting:booting(device),port:device.port,linked:linked(device)}))});
+  window.StationRacks=Object.freeze({open,close,destroy,getState,routeCable:(id,port)=>port===null?unplug(id):connect(id,port),restartDevice});
 })();
